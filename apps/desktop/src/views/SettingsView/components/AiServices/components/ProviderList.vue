@@ -11,7 +11,6 @@
     interface Props {
         providers: Provider[];
         selectedProviderId: number | null;
-        defaultModelProviderIds: Set<number>;
     }
 
     interface Emits {
@@ -47,7 +46,6 @@
                 :key="provider.id"
                 :provider="provider"
                 :is-selected="provider.id === selectedProviderId"
-                :has-default-model="defaultModelProviderIds.has(provider.id)"
                 @select="emit('select', provider.id)"
                 @toggle-enabled="emit('toggle-enabled', provider.id)"
                 @validation-error="emit('validation-error', $event)"

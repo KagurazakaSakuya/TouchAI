@@ -10,7 +10,6 @@
     interface Props {
         provider: Provider;
         isSelected: boolean;
-        hasDefaultModel: boolean;
     }
 
     interface Emits {
@@ -24,8 +23,7 @@
     const emit = defineEmits<Emits>();
 
     const isToggleDisabled = computed(() => {
-        // 如果服务商已启用且有默认模型，则不能禁用
-        return props.provider.enabled === 1 && props.hasDefaultModel;
+        return false;
     });
 
     const handleToggle = () => {
@@ -74,12 +72,6 @@
                 >
                     {{ provider.name }}
                 </h3>
-                <span
-                    v-if="hasDefaultModel"
-                    class="shrink-0 rounded-full bg-neutral-100 px-2 py-0.5 text-xs whitespace-nowrap text-neutral-600 ring-1 ring-neutral-200"
-                >
-                    {{ t('common.default') }}
-                </span>
             </div>
         </div>
 

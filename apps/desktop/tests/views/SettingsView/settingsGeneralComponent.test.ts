@@ -187,7 +187,7 @@ describe('SettingsGeneralSection', () => {
         expect(controls.length).toBeGreaterThanOrEqual(3);
 
         const rowLabels = wrapper.findAll('[data-testid="settings-general-row-label"]');
-        expect(rowLabels).toHaveLength(8);
+        expect(rowLabels).toHaveLength(9);
     });
 
     it('delegates auto-check toggle changes', async () => {

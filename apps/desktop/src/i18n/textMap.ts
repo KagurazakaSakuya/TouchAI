@@ -697,6 +697,7 @@ export const zhToEnTextMap = {
     目标模型: 'Target model',
     升级链: 'Upgrade chain',
     未配置: 'Not configured',
+    模型已是目标模型: 'Model is already the target model',
     '系统将直接切换到新模型，并沿当前上下文继续后续问答。':
         'The system will switch directly to the new model and continue the conversation with the current context.',
     '请先在 UpgradeModel 配置中设置模型升级链。':

@@ -1,7 +1,16 @@
 <!-- Copyright (c) 2025-2026. Qian Cheng. Licensed under GPL v3 -->
 
 <script lang="ts">
+    type AlertSonnerOwnerListener = () => void;
+
     let sonnerOwnerUid: number | null = null;
+    const alertSonnerOwnerListeners = new Set<AlertSonnerOwnerListener>();
+
+    const notifyAlertSonnerOwnerChanged = (): void => {
+        for (const listener of [...alertSonnerOwnerListeners]) {
+            listener();
+        }
+    };
 
     const claimAlertSonnerOwner = (uid: number): boolean => {
         if (sonnerOwnerUid === null) {
@@ -15,7 +24,15 @@
     const releaseAlertSonnerOwner = (uid: number): void => {
         if (sonnerOwnerUid === uid) {
             sonnerOwnerUid = null;
+            notifyAlertSonnerOwnerChanged();
         }
+    };
+
+    const subscribeAlertSonnerOwner = (listener: AlertSonnerOwnerListener): (() => void) => {
+        alertSonnerOwnerListeners.add(listener);
+        return () => {
+            alertSonnerOwnerListeners.delete(listener);
+        };
     };
 </script>
 
@@ -35,12 +52,20 @@
 
     const isSonnerOwner = ref(false);
     const instanceUid = getCurrentInstance()?.uid;
+    let unsubscribeAlertSonnerOwner: (() => void) | undefined;
+
+    const refreshSonnerOwner = () => {
+        if (instanceUid === undefined) return;
+        isSonnerOwner.value = claimAlertSonnerOwner(instanceUid);
+    };
 
     if (instanceUid !== undefined) {
-        isSonnerOwner.value = claimAlertSonnerOwner(instanceUid);
+        refreshSonnerOwner();
+        unsubscribeAlertSonnerOwner = subscribeAlertSonnerOwner(refreshSonnerOwner);
     }
 
     onUnmounted(() => {
+        unsubscribeAlertSonnerOwner?.();
         if (instanceUid !== undefined && isSonnerOwner.value) {
             releaseAlertSonnerOwner(instanceUid);
         }
